@@ -1,6 +1,7 @@
 // Category index must match the order in CATEGORIES exactly.
 // index 0 = Dataset ROOT, 1 = Dataset INTERNAL, 2 = Dataset LEAF
 // index 3 = Workbook FULLY MIGRATED, 4 = PARTIALLY MIGRATED, 5 = NOT MIGRATED
+// index 6 = Data Model (migration target)
 
 export const CATEGORIES = [
   { name: 'Dataset — Root',          itemStyle: { color: '#E8B84B' } },
@@ -9,6 +10,7 @@ export const CATEGORIES = [
   { name: 'Workbook — Done',         itemStyle: { color: '#27AE60' } },
   { name: 'Workbook — Partial',      itemStyle: { color: '#F39C12' } },
   { name: 'Workbook — Not migrated', itemStyle: { color: '#E74C3C' } },
+  { name: 'Data Model',              itemStyle: { color: '#1ABC9C' } },
 ];
 
 export function categoryIndex(nodeType, nodeSubtype) {
@@ -17,6 +19,7 @@ export function categoryIndex(nodeType, nodeSubtype) {
     if (nodeSubtype === 'INTERNAL') return 1;
     return 2; // LEAF or unknown
   }
+  if (nodeType === 'datamodel') return 6;
   // workbook
   if (nodeSubtype === 'FULLY MIGRATED')     return 3;
   if (nodeSubtype === 'PARTIALLY MIGRATED') return 4;
@@ -28,6 +31,7 @@ export function symbolForSubtype(nodeType, nodeSubtype) {
     if (nodeSubtype === 'ROOT') return 'diamond';
     return 'rect';
   }
+  if (nodeType === 'datamodel') return 'roundRect';
   return 'circle';
 }
 
