@@ -39,6 +39,8 @@ export function transformNodes(rawData, colMap) {
     const status      = String(row.status       ?? '');
     const override    = statusItemStyle(nodeType, nodeSubtype, status);
 
+    const url = row.url ? String(row.url) : '';
+
     const node = {
       id,
       name:       String(row.node_name ?? id),
@@ -48,6 +50,8 @@ export function transformNodes(rawData, colMap) {
       node_type:    nodeType,
       node_subtype: nodeSubtype,
       status,
+      url,
+      cursor: url ? 'pointer' : 'default',
     };
     if (override) node.itemStyle = override;
     nodes.push(node);

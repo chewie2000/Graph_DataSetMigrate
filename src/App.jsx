@@ -16,6 +16,12 @@ const _chart = echarts.init(_div);
 const _ro = new ResizeObserver(() => _chart.resize());
 _ro.observe(_div);
 
+_chart.on('click', (params) => {
+  if (params.dataType === 'node' && params.data?.url) {
+    window.open(params.data.url, '_blank');
+  }
+});
+
 // ── Editor panel ──────────────────────────────────────────────────────────────
 const EDITOR_FIELDS = [
   // Nodes source
@@ -26,6 +32,7 @@ const EDITOR_FIELDS = [
   { name: 'nodeSubtypeCol', type: 'column', source: 'nodesSource',              label: 'Node subtype', allowedTypes: ['text'] },
   { name: 'statusCol',      type: 'column', source: 'nodesSource',              label: 'Status',       allowedTypes: ['text'] },
   { name: 'symbolSizeCol',  type: 'column', source: 'nodesSource',              label: 'Symbol size',  allowedTypes: ['number', 'integer'] },
+  { name: 'urlCol',         type: 'column', source: 'nodesSource',              label: 'URL (optional)', allowedTypes: ['text'] },
   // Edges source
   { name: 'edgesSource',    type: 'element',                                    label: 'Edges data source' },
   { name: 'edgeSourceCol',  type: 'column', source: 'edgesSource',              label: 'Source node ID',  allowedTypes: ['text'] },
@@ -66,6 +73,7 @@ export default function App() {
     node_subtype: config?.nodeSubtypeCol,
     status:       config?.statusCol,
     symbol_size:  config?.symbolSizeCol,
+    url:          config?.urlCol,
   };
   const edgesColMap = {
     source:    config?.edgeSourceCol,
@@ -99,7 +107,8 @@ export default function App() {
         formatter: (params) => {
           if (params.dataType === 'node') {
             const d = params.data;
-            return `<b>${d.name}</b><br/>Type: ${d.node_type}<br/>Role: ${d.node_subtype}<br/>Status: ${d.status}`;
+            const hint = d.url ? '<br/><i style="color:#aaa;font-size:11px">Click to open in Sigma</i>' : '';
+            return `<b>${d.name}</b><br/>Type: ${d.node_type}<br/>Role: ${d.node_subtype}<br/>Status: ${d.status}${hint}`;
           }
           if (params.dataType === 'edge') {
             return params.data.edge_type;
